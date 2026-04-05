@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank RAG System - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏦 Bank RAG</h2>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">{{ username[0].upper() }}</div>
+                <div class="user-details">
+                    <p class="user-name">{{ username }}</p>
+                    <p class="user-roles">
+                        {% for role in roles %}
+                            <span class="role-badge">{{ role }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#ask-section" class="nav-link active">Ask Question</a>
+                <a href="#documents-section" class="nav-link">Documents</a>
+                <a href="/logout" class="nav-link logout">Logout</a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>Powered by LangChain + Pinecone</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Ask Question Section -->
+            <section id="ask-section" class="content-section active">
+                <div class="section-header">
+                    <h1>Ask a Question</h1>
+                    <p>Get answers from your assigned document categories</p>
+                </div>
+                
+                <div class="ask-container">
+                    <div class="input-group">
+                        <textarea 
+                            id="questionInput" 
+                            class="question-input"
+                            placeholder="Ask a question about your document categories..."
+                            rows="4"
+                        ></textarea>
+                        <button id="askBtn" class="btn-ask">Ask</button>
+                    </div>
+                    
+                    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Processing your question...</p>
+                    </div>
+                    
+                    <div id="answerContainer" class="answer-container" style="display: none;">
+                        <div class="answer-content">
+                            <h3>Answer</h3>
+                            <div id="answerText" class="answer-text"></div>
+                        </div>
+                        
+                        <div id="sourcesContainer" class="sources-container" style="display: none;">
+                            <h4>Source Documents</h4>
+                            <div id="sourcesList" class="sources-list"></div>
+                        </div>
+                        
+                        <div id="multiCategoryContainer" class="multi-category" style="display: none;">
+                            <h4>Answers by Category</h4>
+                            <div id="categoryAnswers"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="errorContainer" class="error-container" style="display: none;">
+                        <p id="errorText"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents Section -->
+            <section id="documents-section" class="content-section">
+                <div class="section-header">
+                    <h1>Loaded Documents</h1>
+                    <p>Documents available in the vector database</p>
+                </div>
+                
+                <div id="documentsContainer" class="documents-container">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading documents...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Pass data to JavaScript
+        const userRoles = {{ role_codes | tojson }};
+        const roleNames = {{ roles | tojson }};
+    </script>
+</body>
+</html>

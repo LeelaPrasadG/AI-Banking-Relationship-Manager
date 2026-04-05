@@ -1,0 +1,31 @@
+{
+  "loanagent": {
+    "password": "scrypt:32768:8:1$IsSo0xLfZjMEW3pn$62c90af9f7d6af5476600fb4b877bbd20bac731ec51bd845c3833480a09913c8dda20d12ea306f2e50ed40e450d77fb7b3dece2bdd782bf678bf65d5105365fe",
+    "roles": [
+      "auto-loan"
+    ],
+    "created_at": "2026-04-05T14:28:47.736137"
+  },
+  "cardagent": {
+    "password": "scrypt:32768:8:1$orw9Mb8unXeo3FTD$f5a141e743f5f1fbb272d37a7473e1a3d32cc3a189d9fcc750a23ac84523dcec7c7331f695b44efda9fedd1198a815c29f1eb18dce6cb751e78f60bdf028433a",
+    "roles": [
+      "credit-card"
+    ],
+    "created_at": "2026-04-05T14:28:47.869896"
+  },
+  "bankagent": {
+    "password": "scrypt:32768:8:1$RVEWpCKRYfQ9Pjli$e7ae683d4a3f91da7d334f525316fef2ee473945413d75cccde05bf5cc121035170ee36a9fb4282494b0c30cb8145c55f0beb6846cc3eb55392bd68a0bcab9af",
+    "roles": [
+      "banking"
+    ],
+    "created_at": "2026-04-05T14:28:48.000517"
+  },
+  "cardbankagent": {
+    "password": "scrypt:32768:8:1$ohLzf6QvvwifffHl$ffb0e36988b0b21570494e4f575bbe24ffdb8d7b02ed628209fa5376e1a22d0f6fb9d978edce1b07499aedb1b10abefc63ce09f5c149ee786f6affdb78c4861c",
+    "roles": [
+      "credit-card",
+      "banking"
+    ],
+    "created_at": "2026-04-05T14:28:48.129691"
+  }
+}

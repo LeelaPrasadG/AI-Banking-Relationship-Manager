@@ -1,0 +1,76 @@
+{
+  "documents": [
+    {
+      "filename": "auto-loan-terms-and-conditions.pdf",
+      "category": "auto-loan",
+      "loaded_at": "\"2026-04-05T14:56:33.364770\"",
+      "hash": "000c9c47aa0bc90fa471af59229498ed"
+    },
+    {
+      "filename": "auto-loan-terms-and-conditions2.pdf",
+      "category": "auto-loan",
+      "loaded_at": "\"2026-04-05T14:56:33.375505\"",
+      "hash": "249b00956f4ebb5c4688502c9b54941f"
+    },
+    {
+      "filename": "banking2.pdf",
+      "category": "banking",
+      "loaded_at": "\"2026-04-05T14:56:33.382811\"",
+      "hash": "572e87e9b06cd394291c4d3dc8004aad"
+    },
+    {
+      "filename": "banking_terms-and-conditions.pdf",
+      "category": "banking",
+      "loaded_at": "\"2026-04-05T14:56:33.393260\"",
+      "hash": "b0fb37194001b2c6b305bc4188eeea76"
+    },
+    {
+      "filename": "credit-card-terms-conditions.pdf",
+      "category": "credit-card",
+      "loaded_at": "\"2026-04-05T14:56:33.400329\"",
+      "hash": "24e77a929ae707b7cf95d08c20dd1406"
+    },
+    {
+      "filename": "visa-mastercard-classic-gold-platinum-en.pdf",
+      "category": "credit-card",
+      "loaded_at": "\"2026-04-05T14:56:33.410344\"",
+      "hash": "e6dfe5cd3937f6d319ef3284e8d165f8"
+    },
+    {
+      "filename": "auto-loan-terms-and-conditions.pdf",
+      "category": "auto-loan",
+      "loaded_at": "\"2026-04-05T14:56:41.142131\"",
+      "hash": "000c9c47aa0bc90fa471af59229498ed"
+    },
+    {
+      "filename": "auto-loan-terms-and-conditions2.pdf",
+      "category": "auto-loan",
+      "loaded_at": "\"2026-04-05T14:56:41.152338\"",
+      "hash": "249b00956f4ebb5c4688502c9b54941f"
+    },
+    {
+      "filename": "banking2.pdf",
+      "category": "banking",
+      "loaded_at": "\"2026-04-05T14:56:41.161970\"",
+      "hash": "572e87e9b06cd394291c4d3dc8004aad"
+    },
+    {
+      "filename": "banking_terms-and-conditions.pdf",
+      "category": "banking",
+      "loaded_at": "\"2026-04-05T14:56:41.171789\"",
+      "hash": "b0fb37194001b2c6b305bc4188eeea76"
+    },
+    {
+      "filename": "credit-card-terms-conditions.pdf",
+      "category": "credit-card",
+      "loaded_at": "\"2026-04-05T14:56:41.180377\"",
+      "hash": "24e77a929ae707b7cf95d08c20dd1406"
+    },
+    {
+      "filename": "visa-mastercard-classic-gold-platinum-en.pdf",
+      "category": "credit-card",
+      "loaded_at": "\"2026-04-05T14:56:41.189547\"",
+      "hash": "e6dfe5cd3937f6d319ef3284e8d165f8"
+    }
+  ]
+}
