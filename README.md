@@ -111,7 +111,7 @@ Ready to get this running? It's easier than you think.
 ### Step 1: Create Virtual Environment
 
 ```bash
-cd d:\AI\Git\RAG_RBAC_LangChain
+cd d:\AI\Git\AI-Banking-Relationship-Manager
 
 # Windows
 python -m venv venv
@@ -190,26 +190,18 @@ Open **http://localhost:5000** in your browser and login with:
 
 ## 💡 What People Actually Ask
 
-**Relationship Managers ask:**
-- "What's the full picture of customer ABC's business with us?"
-- "How much credit do we have out there across all their accounts?"
-- "What should I talk to them about in our next review?"
+**Banking Account Question:**
+- "I noticed some charges on my account. What's your policy on disputed transactions and how do I file a complaint?"
 
-**Credit Analysts ask:**
-- "Why did this application get flagged?"
-- "What are the financials telling us about this company?"
-- "Does this deal meet our policy and pricing rules?"
-- "Let me draft a clean credit memo."
+**Credit Card Question:**
+- "Can you explain the grace period for credit card payments and any associated fees?"
 
 **Risk & Fraud Teams ask:**
-- "Is this wire request weird? Why?"
-- "What fraud cases look like this one?"
-- "What's the pattern in these alerts?"
+- "What are the current auto loan interest rates and what documentation do I need to apply?"
 
-**Operations & Compliance ask:**
-- "What does our policy say about X?"
-- "How do we handle this situation?"
-- "Can you show me everything we did on this account?"
+**Negative case Question:**
+- "Who are the authors of the paper "Attention is all you need"?"
+
 ## 🛡️ Role-Based Access Control (RBAC) - Detailed Examples
 
 The system enforces strict role-based access control ensuring users only access document categories and data sources relevant to their business function and compliance level.
