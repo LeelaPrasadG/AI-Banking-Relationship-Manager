@@ -1,0 +1,28 @@
+# Environment variables — NEVER commit these
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Cost log (contains usage data, not secrets — remove this line if you want to track it)
+cost_log.json
+
+# Vector DB / app data
+loaded_documents.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
