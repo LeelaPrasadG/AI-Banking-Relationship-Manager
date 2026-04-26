@@ -7,6 +7,7 @@ from config import GROQ_API_KEY, XAI_BASE_URL
 from config import GUARDRAIL_LLM_SCOPE_CHECK_ENABLED, GUARDRAIL_LOG_LEVEL, LOG_LEVEL
 from config import COHERE_API_KEY, COHERE_RERANK_MODEL
 import cohere
+from evaluation import RAGASEvaluator, RAGAS_AVAILABLE
 from cost_monitor import cost_monitor
 from auth import user_has_role
 import json
@@ -262,6 +263,17 @@ class RAGPipeline:
 
         # Guardrails
         self.guardrails = Guardrails(self.llm)
+
+        # RAGAS evaluator (optional – disabled when ragas is not installed)
+        if RAGAS_AVAILABLE:
+            try:
+                self.evaluator = RAGASEvaluator(self.llm, self.embedding_query)
+            except Exception as _eval_err:
+                self.evaluator = None
+                logger.warning("[INIT] RAGAS evaluator init failed: %s", _eval_err)
+        else:
+            self.evaluator = None
+            logger.warning("[INIT] RAGAS not installed – evaluation disabled")
     
     def _get_category_name(self, category):
         """Convert category code to readable name"""
@@ -295,12 +307,16 @@ Answer:"""
             input_variables=["context", "question"]
         )
     
-    def query(self, question, username, user_roles):
+    def query(self, question, username, user_roles, ground_truth=None, run_eval=False):
         """
         Query the RAG system with role-based access control and guardrails.
         Guardrails applied:
           - Input:  PII redaction, out-of-scope detection
           - Output: PII redaction on LLM answers
+        Optional RAGAS evaluation:
+          - run_eval=True  triggers per-category RAGAS scoring.
+          - ground_truth   unlocks the full 6-metric suite; without it only
+            Faithfulness and Answer Relevancy are scored.
         """
         logger.info(
             "[REQUEST] user='%s' roles=%s question='%.100s%s'",
@@ -471,7 +487,10 @@ Answer:"""
                 # Create prompt and get answer
                 prompt = self._create_category_prompt(role)
                 formatted_prompt = prompt.format(context=context, question=question)
-                
+                logger.info(
+                    "[PROMPT] user='%s' role='%s' formatted prompt:\n%s",
+                    username, role, formatted_prompt
+                )
                 # Get LLM response
                 logger.info(
                     "[LLM] invoking model='%s' for user='%s' role='%s'",
@@ -531,15 +550,44 @@ Answer:"""
                 
                 answers_by_category[category_name] = {
                     'answer': answer_text,
-                    # 'sources': [
-                    #     {
-                    #         'filename': chunk['filename'],
-                    #         'category': chunk['category'],
-                    #         'relevance_score': round(chunk['score'], 3)
-                    #     }
-                    #     for chunk in retrieved_chunks
-                    # ]
+                    'evaluation': None,
+                    # 'sources': [...]
                 }
+
+                # ----------------------------------------------------------
+                # RAGAS EVALUATION (optional, per-category)
+                # ----------------------------------------------------------
+                if run_eval:
+                    if self.evaluator:
+                        logger.info(
+                            "[EVAL] triggering RAGAS evaluation for user='%s' role='%s'",
+                            username, role
+                        )
+                        # Limit to top 2 contexts for RAGAS — Groq free tier
+                        # caps gpt-oss-120b at 8000 tokens/request; 4 full chunks
+                        # exceed that. Top 2 (highest rerank scores) are sufficient
+                        # for faithful scoring.
+                        eval_contexts = [c['text'] for c in retrieved_chunks[:2]]
+                        eval_result = self.evaluator.evaluate(
+                            question=question,
+                            answer=answer_text,
+                            contexts=eval_contexts,
+                            ground_truth=ground_truth,
+                            username=username,
+                            role=role,
+                        )
+                        answers_by_category[category_name]['evaluation'] = eval_result
+                    else:
+                        logger.warning(
+                            "[EVAL] evaluation requested but evaluator not available "
+                            "for user='%s' role='%s'",
+                            username, role
+                        )
+                        answers_by_category[category_name]['evaluation'] = {
+                            'success': False,
+                            'error': 'RAGAS evaluator not available (check installation)',
+                            'scores': {},
+                        }
             
             # Prepare response
             response_data = {
@@ -555,6 +603,8 @@ Answer:"""
                 role = user_roles[0]
                 category_name = self._get_category_name(role)
                 response_data['primary_answer'] = answers_by_category[category_name]['answer']
+                if run_eval:
+                    response_data['primary_evaluation'] = answers_by_category[category_name]['evaluation']
                 # response_data['sources'] = answers_by_category[category_name]['sources']
             
             logger.info(

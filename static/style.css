@@ -356,6 +356,89 @@ body {
     cursor: not-allowed;
 }
 
+/* Evaluation options */
+.eval-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.eval-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+}
+
+.eval-checkbox-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.ground-truth-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    box-sizing: border-box;
+}
+
+.ground-truth-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Evaluation scores */
+.eval-scores {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+}
+
+.eval-scores h4 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.eval-score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.eval-score-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.eval-score-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+}
+
+.eval-score-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
 /* Loading Spinner */
 .loading-spinner {
     display: flex;

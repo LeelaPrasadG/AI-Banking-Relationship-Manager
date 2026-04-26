@@ -1,0 +1,105 @@
+[
+  {
+    "timestamp": "2026-04-26T17:24:33.210132Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN
+    }
+  },
+  {
+    "timestamp": "2026-04-26T17:39:44.064408Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": 0.826
+    }
+  },
+  {
+    "timestamp": "2026-04-26T17:42:52.180779Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": 0.835
+    }
+  },
+  {
+    "timestamp": "2026-04-26T17:45:31.951282Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": 0.0
+    }
+  },
+  {
+    "timestamp": "2026-04-26T17:48:19.694958Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN
+    }
+  },
+  {
+    "timestamp": "2026-04-26T17:53:52.744254Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.0
+    }
+  },
+  {
+    "timestamp": "2026-04-26T18:00:51.396686Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": 0.4,
+      "answer_relevancy": 0.8079
+    }
+  },
+  {
+    "timestamp": "2026-04-26T18:04:10.687824Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": false,
+    "scores": {
+      "faithfulness": 0.375,
+      "answer_relevancy": 0.0
+    }
+  },
+  {
+    "timestamp": "2026-04-26T18:05:37.447681Z",
+    "username": "cardagent",
+    "role": "credit-card",
+    "question_preview": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances dif",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": 0.7,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.0,
+      "context_entity_recall": 0.0,
+      "noise_sensitivity(mode=relevant)": 0.0
+    }
+  }
+]

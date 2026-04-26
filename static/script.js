@@ -56,6 +56,10 @@ function switchSection(sectionId) {
 // Ask Question Functionality
 // ============================================
 
+document.getElementById('enableEval').addEventListener('change', function() {
+    document.getElementById('groundTruthInput').style.display = this.checked ? 'block' : 'none';
+});
+
 let isAsking = false;
 
 document.getElementById('askBtn').addEventListener('click', askQuestion);
@@ -75,6 +79,9 @@ async function askQuestion() {
         showError('Please enter a question');
         return;
     }
+
+    const evaluate = document.getElementById('enableEval').checked;
+    const groundTruth = document.getElementById('groundTruthInput').value.trim() || null;
     
     isAsking = true;
     document.getElementById('askBtn').disabled = true;
@@ -88,7 +95,7 @@ async function askQuestion() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ question })
+            body: JSON.stringify({ question, evaluate, ground_truth: groundTruth })
         });
         
         const data = await response.json();
@@ -129,6 +136,9 @@ function displayAnswer(data) {
         }
         
         document.getElementById('multiCategoryContainer').style.display = 'none';
+
+        // Show evaluation scores if present
+        displayEvalScores('answerContainer', data.primary_evaluation);
     } else if (data.answers_by_category) {
         // Multiple role answers
         document.getElementById('answerText').textContent = 'Multiple categories provided answers below.';
@@ -160,6 +170,11 @@ function displayAnswer(data) {
                 sourcesDiv.innerHTML += '</small>';
                 categoryDiv.appendChild(sourcesDiv);
             }
+
+            // Evaluation scores per category
+            if (categoryData.evaluation && categoryData.evaluation.scores) {
+                categoryDiv.appendChild(buildEvalScoresEl(categoryData.evaluation.scores));
+            }
             
             categoryAnswersDiv.appendChild(categoryDiv);
         }
@@ -170,6 +185,37 @@ function displayAnswer(data) {
     
     container.style.display = 'block';
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildEvalScoresEl(scores) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'eval-scores';
+    wrapper.innerHTML = '<h4>RAGAS Evaluation</h4>';
+    const grid = document.createElement('div');
+    grid.className = 'eval-score-grid';
+    for (const [metric, value] of Object.entries(scores)) {
+        const item = document.createElement('div');
+        item.className = 'eval-score-item';
+        const label = metric.replace(/_/g, ' ');
+        const display = (typeof value === 'number' && !isNaN(value))
+            ? value.toFixed(3)
+            : (value ?? 'N/A');
+        item.innerHTML = `<span class="eval-score-label">${label}</span>
+                          <span class="eval-score-value">${display}</span>`;
+        grid.appendChild(item);
+    }
+    wrapper.appendChild(grid);
+    return wrapper;
+}
+
+function displayEvalScores(containerId, evaluation) {
+    const container = document.getElementById(containerId);
+    // Remove any existing eval scores panel
+    const existing = container.querySelector('.eval-scores');
+    if (existing) existing.remove();
+    if (evaluation && evaluation.scores && Object.keys(evaluation.scores).length > 0) {
+        container.appendChild(buildEvalScoresEl(evaluation.scores));
+    }
 }
 
 function displaySources(sources) {

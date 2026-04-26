@@ -24,6 +24,13 @@ OPENAI_MODEL = 'openai/gpt-oss-120b'  # Groq model
 COHERE_API_KEY = os.getenv('COHERE_API_KEY')
 COHERE_RERANK_MODEL = 'rerank-v3.5'
 
+# RAGAS Evaluation Configuration
+# Separate model for RAGAS metric scoring — must have higher token limits than
+# gpt-oss-120b (free tier: 8K TPM). llama-3.3-70b-versatile has 32K context.
+# Does NOT need function-calling; LangchainLLMWrapper uses text prompting.
+RAGAS_EVAL_MODEL = 'llama-3.3-70b-versatile'
+
+
 # Pinecone Configuration
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY', '')
 PINECONE_ENVIRONMENT = os.getenv('PINECONE_ENVIRONMENT', 'us-east-1')

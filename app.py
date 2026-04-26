@@ -223,9 +223,11 @@ def ask_question():
         username = session.get('username')
         user = session.get('user', {})
         user_roles = user.get('roles', [])
+        run_eval = bool(data.get('evaluate', True))
+        ground_truth = data.get('ground_truth') or None
         logger.info(
-            "[API:ASK] user='%s' roles=%s question='%.80s%s'",
-            username, user_roles, question, '...' if len(question) > 80 else ''
+            "[API:ASK] user='%s' roles=%s evaluate=%s question='%.80s%s'",
+            username, user_roles, run_eval, question, '...' if len(question) > 80 else ''
         )
         
         if not user_roles:
@@ -236,11 +238,15 @@ def ask_question():
             }), 403
         
         # Query the RAG pipeline
-        result = rag_pipeline.query(question, username, user_roles)
+        result = rag_pipeline.query(
+            question, username, user_roles,
+            ground_truth=ground_truth,
+            run_eval=run_eval,
+        )
         
         logger.info(
-            "[API:ASK] response for user='%s' success=%s guardrail_blocked=%s",
-            username, result.get('success'), result.get('guardrail_blocked', False)
+            "[API:ASK] response for user='%s' success=%s guardrail_blocked=%s evaluated=%s",
+            username, result.get('success'), result.get('guardrail_blocked', False), run_eval
         )
         return jsonify(result)
     
@@ -251,10 +257,33 @@ def ask_question():
             'message': f'Error processing question: {str(e)}'
         }), 500
 
+@app.route('/api/evaluation-log', methods=['GET'])
+@login_required
+def get_evaluation_log():
+    """Return the RAGAS evaluation history."""
+    import os, json as _json
+    from evaluation import EVAL_LOG_FILE
+    try:
+        if not os.path.exists(EVAL_LOG_FILE):
+            return jsonify({'success': True, 'log': [], 'total': 0})
+        with open(EVAL_LOG_FILE, 'r') as f:
+            log = _json.load(f)
+        # Newest first
+        log_sorted = list(reversed(log))
+        limit = request.args.get('limit', default=50, type=int)
+        return jsonify({
+            'success': True,
+            'log': log_sorted[:limit],
+            'total': len(log),
+        })
+    except Exception as e:
+        logger.error("[API:EVAL-LOG] %s", e, exc_info=True)
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
 @app.route('/api/documents', methods=['GET'])
 @login_required
 def get_documents():
-    """API endpoint to get loaded documents"""
     try:
         documents = get_all_documents()
         metadata = load_documents_metadata()
