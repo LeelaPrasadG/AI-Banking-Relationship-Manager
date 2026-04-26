@@ -3,7 +3,10 @@ from langchain_core.prompts import PromptTemplate
 from langchain_openai import OpenAIEmbeddings
 from pinecone import Pinecone
 from config import OPENAI_API_KEY, PINECONE_API_KEY, PINECONE_INDEX_NAME, OPENAI_MODEL
-from config import GUARDRAIL_LLM_SCOPE_CHECK_ENABLED, GUARDRAIL_LOG_LEVEL
+from config import GROQ_API_KEY, XAI_BASE_URL
+from config import GUARDRAIL_LLM_SCOPE_CHECK_ENABLED, GUARDRAIL_LOG_LEVEL, LOG_LEVEL
+from config import COHERE_API_KEY, COHERE_RERANK_MODEL
+import cohere
 from cost_monitor import cost_monitor
 from auth import user_has_role
 import json
@@ -17,7 +20,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=getattr(logging, GUARDRAIL_LOG_LEVEL, logging.WARNING))
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+# Guardrail sub-logger respects its own level setting
+logging.getLogger('guardrail').setLevel(getattr(logging, GUARDRAIL_LOG_LEVEL, logging.WARNING))
 
 # ---------------------------------------------------------------------------
 # PII patterns — compiled once at module load
@@ -219,16 +228,21 @@ class Guardrails:
 
 class RAGPipeline:
     def __init__(self):
+        if not GROQ_API_KEY:
+            raise ValueError('GROQ_API_KEY is not set. Please check your .env file')
         if not OPENAI_API_KEY:
-            raise ValueError('OPENAI_API_KEY is not set. Please check your .env file')
-        
+            raise ValueError('OPENAI_API_KEY is not set (required for embeddings). Please check your .env file')
+
+        # LLM: xAI Grok via OpenAI-compatible API
         self.llm = ChatOpenAI(
-            api_key=OPENAI_API_KEY,
+            api_key=GROQ_API_KEY,
+            base_url=XAI_BASE_URL,
             model=OPENAI_MODEL,
             temperature=0.3,
             max_tokens=1000
         )
-        self.embedding = OpenAIEmbeddings(
+        # Embeddings: OpenAI (xAI has no embedding models)
+        self.embedding_query = OpenAIEmbeddings(
             api_key=OPENAI_API_KEY,
             model='text-embedding-3-small'
         )
@@ -237,6 +251,14 @@ class RAGPipeline:
         # Initialize Pinecone client
         self.pc = Pinecone(api_key=PINECONE_API_KEY)
         self.index = self.pc.Index(self.index_name)
+
+        # Cohere re-ranker (optional – disabled when COHERE_API_KEY is absent)
+        if COHERE_API_KEY:
+            self.cohere_client = cohere.ClientV2(api_key=COHERE_API_KEY)
+            logger.info("[INIT] Cohere re-ranker enabled (model=%s)", COHERE_RERANK_MODEL)
+        else:
+            self.cohere_client = None
+            logger.warning("[INIT] COHERE_API_KEY not set – re-ranking disabled")
 
         # Guardrails
         self.guardrails = Guardrails(self.llm)
@@ -280,8 +302,13 @@ Answer:"""
           - Input:  PII redaction, out-of-scope detection
           - Output: PII redaction on LLM answers
         """
-        
+        logger.info(
+            "[REQUEST] user='%s' roles=%s question='%.100s%s'",
+            username, user_roles, question, '...' if len(question) > 100 else ''
+        )
+
         if not user_roles:
+            logger.warning("[REQUEST] user='%s' has no assigned roles – aborting", username)
             return {
                 'success': False,
                 'answer': 'Error: User has no assigned roles.',
@@ -292,19 +319,20 @@ Answer:"""
         # ------------------------------------------------------------------
         # INPUT GUARDRAIL
         # ------------------------------------------------------------------
+        logger.info("[GUARDRAIL:INPUT] running PII + scope checks for user='%s'", username)
         input_check = self.guardrails.check_input(question, user_roles)
 
         if input_check.pii_found:
             # Use the redacted version for all downstream processing
             question = input_check.modified_text
             logger.info(
-                "User '%s': PII removed from question – types: %s",
+                "[GUARDRAIL:INPUT] PII redacted for user='%s' types=%s",
                 username, input_check.pii_found
             )
 
         if not input_check.passed:
             logger.info(
-                "User '%s': question blocked by input guardrail – %s",
+                "[GUARDRAIL:INPUT] BLOCKED for user='%s' reason='%s'",
                 username, input_check.reason
             )
             return {
@@ -315,10 +343,14 @@ Answer:"""
                 'allowed_categories': [self._get_category_name(r) for r in user_roles],
             }
 
+        logger.info("[GUARDRAIL:INPUT] passed for user='%s'", username)
+
         try:
             # Get embedding for the question
-            question_embedding = self.embedding.embed_query(question)
+            logger.info("[EMBEDDING] generating query embedding for user='%s'", username)
+            question_embedding = self.embedding_query.embed_query(question)
             cost_monitor.record_embedding(username, 'text-embedding-3-small', question)
+            logger.debug("[EMBEDDING] done for user='%s'", username)
 
             # Collect results from all user's roles
             answers_by_category = {}
@@ -326,6 +358,10 @@ Answer:"""
             
             for role in user_roles:
                 category_name = self._get_category_name(role)
+                logger.info(
+                    "[VECTOR_SEARCH] user='%s' role='%s' querying Pinecone (top_k=4, filter=category)",
+                    username, role
+                )
                 
                 # Query Pinecone directly for this role
                 try:
@@ -338,7 +374,10 @@ Answer:"""
                     )
                 except Exception as filter_error:
                     # If filtering fails, query without filter and filter manually
-                    print(f"Filter query failed, trying without filter: {str(filter_error)}")
+                    logger.warning(
+                        "[VECTOR_SEARCH] filter query failed for role='%s', retrying without filter: %s",
+                        role, filter_error
+                    )
                     query_result = self.index.query(
                         vector=question_embedding,
                         top_k=10,
@@ -366,6 +405,64 @@ Answer:"""
                 if 'filter_error' in locals():
                     retrieved_chunks = [c for c in retrieved_chunks if c['category'] == role][:4]
                 
+                logger.info(
+                    "[VECTOR_SEARCH] user='%s' role='%s' retrieved %d chunks",
+                    username, role, len(retrieved_chunks)
+                )
+                if retrieved_chunks:
+                    for i, c in enumerate(retrieved_chunks, 1):
+                        logger.info(
+                            "[VECTOR_SEARCH]   #%d  file='%s'  category='%s'  vector_score=%.4f  "
+                            "text_preview='%.80s'",
+                            i, c['filename'], c['category'], c['score'],
+                            c['text'].replace('\n', ' ')
+                        )
+
+                # ----------------------------------------------------------
+                # COHERE RE-RANKING
+                # ----------------------------------------------------------
+                if self.cohere_client and retrieved_chunks:
+                    logger.info(
+                        "[RERANK] user='%s' role='%s' re-ranking %d chunks with model=%s",
+                        username, role, len(retrieved_chunks), COHERE_RERANK_MODEL
+                    )
+                    try:
+                        rerank_response = self.cohere_client.rerank(
+                            model=COHERE_RERANK_MODEL,
+                            query=question,
+                            documents=[c['text'] for c in retrieved_chunks],
+                            top_n=len(retrieved_chunks),
+                        )
+                        # Reorder chunks by Cohere relevance score (descending)
+                        reranked = sorted(
+                            [
+                                {
+                                    **retrieved_chunks[r.index],
+                                    'rerank_score': r.relevance_score,
+                                }
+                                for r in rerank_response.results
+                            ],
+                            key=lambda c: c['rerank_score'],
+                            reverse=True,
+                        )
+                        logger.info(
+                            "[RERANK] user='%s' role='%s' re-ranked %d chunks:",
+                            username, role, len(reranked)
+                        )
+                        for i, c in enumerate(reranked, 1):
+                            logger.info(
+                                "[RERANK]   #%d  file='%s'  rerank_score=%.4f  "
+                                "vector_score=%.4f  text_preview='%.80s'",
+                                i, c['filename'], c['rerank_score'], c['score'],
+                                c['text'].replace('\n', ' ')
+                            )
+                        retrieved_chunks = reranked
+                    except Exception as rerank_error:
+                        logger.warning(
+                            "[RERANK] failed for user='%s' role='%s', using original order: %s",
+                            username, role, rerank_error
+                        )
+
                 # Extract context from chunks
                 context = "\n---\n".join([
                     chunk['text'] for chunk in retrieved_chunks
@@ -376,6 +473,10 @@ Answer:"""
                 formatted_prompt = prompt.format(context=context, question=question)
                 
                 # Get LLM response
+                logger.info(
+                    "[LLM] invoking model='%s' for user='%s' role='%s'",
+                    OPENAI_MODEL, username, role
+                )
                 try:
                     response = self.llm.invoke(formatted_prompt)
                     answer_text = response.content if hasattr(response, 'content') else str(response)
@@ -395,21 +496,38 @@ Answer:"""
                         username, OPENAI_MODEL, prompt_tokens, completion_tokens, role
                     )
                     request_total_cost += call_cost
+                    logger.info(
+                        "[LLM] response for user='%s' role='%s' prompt_tokens=%d "
+                        "completion_tokens=%d cost=$%.6f",
+                        username, role, prompt_tokens, completion_tokens, call_cost
+                    )
 
                 except Exception as llm_error:
-                    print(f"LLM Error for {role}: {str(llm_error)}")
+                    logger.error(
+                        "[LLM] error for user='%s' role='%s': %s",
+                        username, role, llm_error, exc_info=True
+                    )
                     answer_text = f"Error getting response: {str(llm_error)}"
 
                 # ----------------------------------------------------------
                 # OUTPUT GUARDRAIL – redact any PII that leaked into answer
                 # ----------------------------------------------------------
+                logger.debug(
+                    "[GUARDRAIL:OUTPUT] checking answer for user='%s' role='%s'",
+                    username, role
+                )
                 output_check = self.guardrails.check_output(answer_text)
                 if output_check.pii_found:
                     logger.warning(
-                        "User '%s' / category '%s': PII removed from LLM answer – types: %s",
+                        "[GUARDRAIL:OUTPUT] PII redacted for user='%s' role='%s' types=%s",
                         username, role, output_check.pii_found
                     )
                     answer_text = output_check.modified_text
+                else:
+                    logger.debug(
+                        "[GUARDRAIL:OUTPUT] passed for user='%s' role='%s'",
+                        username, role
+                    )
                 
                 answers_by_category[category_name] = {
                     'answer': answer_text,
@@ -439,12 +557,19 @@ Answer:"""
                 response_data['primary_answer'] = answers_by_category[category_name]['answer']
                 # response_data['sources'] = answers_by_category[category_name]['sources']
             
+            logger.info(
+                "[RESPONSE] user='%s' roles=%s categories=%s total_cost=$%.6f",
+                username, user_roles,
+                list(answers_by_category.keys()),
+                request_total_cost
+            )
             return response_data
         
         except Exception as e:
-            print(f"Error in RAG query: {str(e)}")
-            import traceback
-            traceback.print_exc()
+            logger.error(
+                "[QUERY_ERROR] user='%s': %s",
+                username, e, exc_info=True
+            )
             return {
                 'success': False,
                 'answer': f'Error processing query: {str(e)}',

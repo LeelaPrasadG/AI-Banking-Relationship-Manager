@@ -12,7 +12,7 @@ class VectorDBManager:
     def __init__(self):
         self.api_key = PINECONE_API_KEY
         self.index_name = PINECONE_INDEX_NAME
-        self.embedding_model = OpenAIEmbeddings(
+        self.embedding_vectorIngestion = OpenAIEmbeddings(
             api_key=OPENAI_API_KEY,
             model='text-embedding-3-small'
         )
@@ -63,7 +63,7 @@ class VectorDBManager:
             metadatas = [doc['metadata'] for doc in documents]
             
             # Get embeddings for all documents
-            embeddings = self.embedding_model.embed_documents(texts)
+            embeddings = self.embedding_vectorIngestion.embed_documents(texts)
             
             # Prepare vectors for Pinecone (format: (id, values, metadata))
             vectors = []
@@ -93,7 +93,7 @@ class VectorDBManager:
         try:
             vector_store = LangchainPinecone.from_existing_index(
                 index_name=self.index_name,
-                embedding=self.embedding_model
+                embedding=self.embedding_vectorIngestion
             )
             
             if category_filter:
@@ -114,7 +114,7 @@ class VectorDBManager:
         try:
             vector_store = LangchainPinecone.from_existing_index(
                 index_name=self.index_name,
-                embedding=self.embedding_model
+                embedding=self.embedding_vectorIngestion
             )
             return vector_store
         except Exception as e:
@@ -137,7 +137,7 @@ class VectorDBManager:
             # Create a temporary vector store to get access to delete operations
             vector_store = LangchainPinecone.from_existing_index(
                 index_name=self.index_name,
-                embedding=self.embedding_model
+                embedding=self.embedding_vectorIngestion
             )
             # Note: Clearing entire index requires direct Pinecone client access
             # This is a simplified version - in production, use Pinecone client directly

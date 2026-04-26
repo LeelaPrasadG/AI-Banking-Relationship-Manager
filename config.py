@@ -8,11 +8,21 @@ FLASK_ENV = os.getenv('FLASK_ENV', 'development')
 DEBUG = os.getenv('DEBUG', True)
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
 
-# OpenAI Configuration
+# OpenAI Configuration (used for embeddings only)
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 if not OPENAI_API_KEY:
     raise ValueError('OPENAI_API_KEY environment variable is required!')
-OPENAI_MODEL = 'gpt-5.4'  # Using GPT-5.4 model
+
+# Groq Cloud Configuration (used for LLM inference)
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+if not GROQ_API_KEY:
+    raise ValueError('GROQ_API_KEY environment variable is required!')
+XAI_BASE_URL = 'https://api.groq.com/openai/v1'
+OPENAI_MODEL = 'openai/gpt-oss-120b'  # Groq model
+
+# Cohere Configuration (used for re-ranking retrieved chunks)
+COHERE_API_KEY = os.getenv('COHERE_API_KEY')
+COHERE_RERANK_MODEL = 'rerank-v3.5'
 
 # Pinecone Configuration
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY', '')
@@ -45,6 +55,12 @@ GUARDRAIL_LLM_SCOPE_CHECK_ENABLED = True
 # Logging level for guardrail events: 'WARNING' to log only violations, 'INFO' for all events.
 GUARDRAIL_LOG_LEVEL = 'WARNING'
 
+# Application Logging
+# Controls overall flow-trace logging level. Set to 'DEBUG' for maximum verbosity,
+# 'INFO' to trace the request/response flow, 'WARNING' for errors only.
+# Can be overridden via the LOG_LEVEL environment variable.
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+
 # ---------------------------------------------------------------------------
 # Cost Monitoring Configuration
 # ---------------------------------------------------------------------------
@@ -55,15 +71,16 @@ COST_LOG_FILE = 'cost_log.json'
 # Update these to match your OpenAI billing tier.
 # Current public rates (April 2026) — verify at https://openai.com/pricing
 COST_PER_1K_TOKENS: dict = {
-    'gpt-5.4':                    {'input': 0.005,   'output': 0.020},
-    'gpt-4.1':                    {'input': 0.002,   'output': 0.008},
-    'gpt-4o':                     {'input': 0.0025,  'output': 0.010},
-    'gpt-4o-mini':                {'input': 0.00015, 'output': 0.00060},
-    'gpt-3.5-turbo':              {'input': 0.0005,  'output': 0.0015},
+    # xAI Grok models — verify current rates at https://x.ai/api#pricing
+    'openai/gpt-oss-120b':        {'input': 0.005,   'output': 0.015},
+    'grok-3':                     {'input': 0.003,   'output': 0.015},
+    'grok-3-mini':                {'input': 0.0003,  'output': 0.0005},
+    'grok-2':                     {'input': 0.002,   'output': 0.010},
+    # OpenAI models (embeddings)
     'text-embedding-3-small':     {'input': 0.00002, 'output': 0.0},
     'text-embedding-3-large':     {'input': 0.00013, 'output': 0.0},
     # Fallback for unknown models
-    'default':                    {'input': 0.005,   'output': 0.020},
+    'default':                    {'input': 0.005,   'output': 0.015},
 }
 
 # Alert thresholds (USD).  Set to 0 to disable a specific alert.

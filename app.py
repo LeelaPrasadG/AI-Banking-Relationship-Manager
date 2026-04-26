@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from flask_cors import CORS
 from functools import wraps
 import json
+import logging
 from datetime import datetime
 import hashlib
 import os
@@ -10,7 +11,14 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-from config import SECRET_KEY, FLASK_ENV, OPENAI_API_KEY
+from config import SECRET_KEY, FLASK_ENV, OPENAI_API_KEY, LOG_LEVEL
+
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+logger = logging.getLogger(__name__)
 from auth import authenticate_user, get_user_roles, init_users
 from auth import user_has_role
 from document_processor import (
@@ -37,6 +45,7 @@ def init_vector_db():
     """Initialize vector database and load documents"""
     global vector_db, rag_pipeline
     
+    logger.info("[INIT] starting vector database initialisation")
     print("\n" + "="*60)
     print("Initializing Vector Database")
     print("="*60)
@@ -44,6 +53,7 @@ def init_vector_db():
     try:
         vector_db = VectorDBManager()
         rag_pipeline = RAGPipeline()
+        logger.info("[INIT] VectorDBManager and RAGPipeline created")
         
         # Load unloaded documents
         unloaded_docs = get_unloaded_documents()
@@ -62,6 +72,10 @@ def init_vector_db():
                         # Split text into chunks
                         chunks = DocumentProcessor.split_into_chunks(text)
                         print(f"    - Extracted text: {len(text)} characters, {len(chunks)} chunks")
+                        logger.info(
+                            "[INIT] '%s' category='%s' chars=%d chunks=%d",
+                            doc['filename'], doc['category'], len(text), len(chunks)
+                        )
                         
                         # Prepare chunks for batch upload
                         for idx, chunk in enumerate(chunks):
@@ -84,6 +98,7 @@ def init_vector_db():
                         }
                 except Exception as e:
                     print(f"    ✗ Error extracting text: {str(e)}")
+                    logger.error("[INIT] error extracting '%s': %s", doc['filename'], e)
             
             # Batch add all chunks to Pinecone
             if all_chunks:
@@ -93,8 +108,10 @@ def init_vector_db():
                     for filename, info in doc_metadata_map.items():
                         add_document_to_metadata(filename, info['category'], info['hash'])
                     print(f"\n✓ All {len(all_chunks)} chunks successfully added to vector database")
+                    logger.info("[INIT] %d chunks uploaded to Pinecone", len(all_chunks))
                 else:
                     print(f"\n✗ Failed to add document chunks to Pinecone")
+                    logger.error("[INIT] batch upload to Pinecone failed")
             else:
                 print("\nNo chunks extracted from documents.")
         else:
@@ -112,10 +129,11 @@ def init_vector_db():
                     print(f"  - {doc}")
         
         print("\n" + "="*60 + "\n")
-        
+        logger.info("[INIT] vector database initialisation complete")
         return True
     except Exception as e:
         print(f"Error initializing vector database: {str(e)}")
+        logger.error("[INIT] vector database initialisation failed: %s", e, exc_info=True)
         return False
 
 def login_required(f):
@@ -151,12 +169,14 @@ def login():
         if user:
             session['user'] = user
             session['username'] = username
+            logger.info("[LOGIN] SUCCESS user='%s'", username)
             return jsonify({
                 'success': True,
                 'message': 'Login successful',
                 'redirect': url_for('dashboard')
             })
         else:
+            logger.warning("[LOGIN] FAILED user='%s' reason='%s'", username, message)
             return jsonify({
                 'success': False,
                 'message': message
@@ -203,8 +223,13 @@ def ask_question():
         username = session.get('username')
         user = session.get('user', {})
         user_roles = user.get('roles', [])
+        logger.info(
+            "[API:ASK] user='%s' roles=%s question='%.80s%s'",
+            username, user_roles, question, '...' if len(question) > 80 else ''
+        )
         
         if not user_roles:
+            logger.warning("[API:ASK] user='%s' has no assigned roles", username)
             return jsonify({
                 'success': False,
                 'message': 'User has no assigned roles'
@@ -213,10 +238,14 @@ def ask_question():
         # Query the RAG pipeline
         result = rag_pipeline.query(question, username, user_roles)
         
+        logger.info(
+            "[API:ASK] response for user='%s' success=%s guardrail_blocked=%s",
+            username, result.get('success'), result.get('guardrail_blocked', False)
+        )
         return jsonify(result)
     
     except Exception as e:
-        print(f"Error in ask endpoint: {str(e)}")
+        logger.error("[API:ASK] unhandled error for user='%s': %s", session.get('username'), e, exc_info=True)
         return jsonify({
             'success': False,
             'message': f'Error processing question: {str(e)}'
@@ -268,7 +297,9 @@ def get_stats():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     """User logout"""
+    username = session.get('username')
     session.clear()
+    logger.info("[LOGOUT] user='%s'", username)
     return redirect(url_for('login'))
 
 @app.errorhandler(404)

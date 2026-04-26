@@ -1,14 +1,40 @@
 {
   "2026-04-20": {
-    "total_cost_usd": 0.010731,
-    "total_prompt_tokens": 1550,
-    "total_completion_tokens": 149,
-    "total_embedding_tokens": 50,
-    "total_calls": 4,
+    "total_cost_usd": 0.044693359999999994,
+    "total_prompt_tokens": 4304,
+    "total_completion_tokens": 1495,
+    "total_embedding_tokens": 168,
+    "total_calls": 13,
     "users": {
       "cardagent": {
-        "cost_usd": 0.010731,
-        "calls": 4
+        "cost_usd": 0.044693359999999994,
+        "calls": 13
+      }
+    }
+  },
+  "2026-04-25": {
+    "total_cost_usd": 0.027502560000000002,
+    "total_prompt_tokens": 2602,
+    "total_completion_tokens": 966,
+    "total_embedding_tokens": 128,
+    "total_calls": 8,
+    "users": {
+      "cardagent": {
+        "cost_usd": 0.027502560000000002,
+        "calls": 8
+      }
+    }
+  },
+  "2026-04-26": {
+    "total_cost_usd": 0.0096554,
+    "total_prompt_tokens": 815,
+    "total_completion_tokens": 372,
+    "total_embedding_tokens": 20,
+    "total_calls": 2,
+    "users": {
+      "cardagent": {
+        "cost_usd": 0.0096554,
+        "calls": 2
       }
     }
   }
