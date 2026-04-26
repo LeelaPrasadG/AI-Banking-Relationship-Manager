@@ -1,0 +1,163 @@
+{
+  "_meta": {
+    "description": "Ground-truth QA pairs for offline RAGAS CI evaluation.",
+    "version": "1.0.0",
+    "created": "2026-04-26",
+    "sources": [
+      "RAGDocs/auto-loan-terms-and-conditions.pdf",
+      "RAGDocs/auto-loan-terms-and-conditions2.pdf",
+      "RAGDocs/banking_terms-and-conditions.pdf",
+      "RAGDocs/banking2.pdf",
+      "RAGDocs/credit-card-terms-conditions.pdf",
+      "RAGDocs/visa-mastercard-classic-gold-platinum-en.pdf"
+    ],
+    "thresholds": {
+      "faithfulness": 0.7,
+      "answer_relevancy": 0.7,
+      "context_precision": 0.5,
+      "context_recall": 0.5
+    }
+  },
+  "cases": [
+    {
+      "id": "auto-001",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What website governs Capital One Auto Finance's online terms and conditions, and what does accepting the agreement mean for the borrower?",
+      "ground_truth": "The website www.capitalone.com (the Online Servicing Site) governs Capital One Auto Finance's online terms and conditions. By using the Services, the borrower acknowledges that they have read and agree to abide by the terms and conditions of the Agreement. If the borrower decides not to agree to the terms and conditions, they may not use the Services. Use of the Services after notice of any changes constitutes acceptance of those changes."
+    },
+    {
+      "id": "auto-002",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What happens to the lien on your vehicle title after you fully pay off your auto loan?",
+      "ground_truth": "Once you have paid off your auto loan, the lien on your vehicle title should be satisfied. The lien holder should send you either the title or a lien release document within a reasonable amount of time. Once you receive either of these documents, you follow your state's protocol for transferring the title to your name."
+    },
+    {
+      "id": "auto-003",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "Can Capital One change the terms and conditions of an auto loan agreement? Under what circumstances?",
+      "ground_truth": "Yes, Capital One may revise, update, discontinue, or otherwise modify the terms and conditions of the agreement at any time. They will attempt to provide prior notice of material changes by posting a notice on the Online Servicing Site when you log in, sending a notice to your address on file, or by other permitted methods. Capital One reserves the right to make changes effective immediately if necessary to maintain system security or to comply with any laws or regulations. Continued use of the Services after notice of changes constitutes acceptance of those changes."
+    },
+    {
+      "id": "auto-004",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What is a gap coverage application in the context of an auto loan, and when might it be relevant?",
+      "ground_truth": "A gap coverage application in the context of an auto loan refers to an application for Guaranteed Asset Protection (GAP) coverage. GAP coverage is relevant when the outstanding loan balance exceeds the actual cash value of the vehicle — for example, when a vehicle is totaled in an accident or stolen shortly after purchase and standard auto insurance pays less than what is owed on the loan. It helps cover the shortfall between the insurance payout and the remaining loan balance."
+    },
+    {
+      "id": "auto-005",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "How does the Prime Rate affect variable APR on a Capital One auto loan?",
+      "ground_truth": "Variable APR on a Capital One auto loan is tied to the Prime Rate. When the Prime Rate changes, the variable interest rate on the loan adjusts accordingly, which can increase or decrease your interest charges and required minimum payment amounts. The specific margin added to the Prime Rate is determined at the time of loan origination based on your creditworthiness."
+    },
+    {
+      "id": "auto-006",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What is required if you want to refinance an auto loan with Capital One, and how is creditworthiness evaluated?",
+      "ground_truth": "To refinance an auto loan with Capital One, you must submit a new loan application. Creditworthiness is evaluated based on your credit history, income, existing debts, and ability to repay. Capital One reviews your credit report and financial information to determine whether to approve the refinancing and at what interest rate. Terms and rates may differ from your original loan."
+    },
+    {
+      "id": "auto-007",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What does the term 'payoff amount' mean for an auto loan, and how is it different from the remaining principal balance?",
+      "ground_truth": "The payoff amount for an auto loan is the total amount required to completely pay off the loan as of a specific date. It includes the remaining principal balance plus any interest accrued since the last payment and any applicable fees. The remaining principal balance, by contrast, is only the original borrowed amount that has not yet been repaid — it does not include accrued interest or fees. Therefore, the payoff amount is typically higher than the remaining principal balance alone."
+    },
+    {
+      "id": "bank-001",
+      "category": "banking",
+      "role": "banking",
+      "question": "What is the Capital One Online Banking agreement governing number and when was it last modified?",
+      "ground_truth": "The Capital One Online Banking Terms and Conditions agreement was last modified on 12/2/2025. It governs the use of the Services available through the Online Banking Website, including access via https://www.capitalone.com and https://myaccounts.capitalone.com."
+    },
+    {
+      "id": "bank-002",
+      "category": "banking",
+      "role": "banking",
+      "question": "How can a customer withdraw their consent to the Capital One Online Banking agreement, and what is the consequence?",
+      "ground_truth": "A customer can withdraw their consent to the Capital One Online Banking agreement at any time by calling Capital One at (844) 348-8656. However, withdrawing consent will result in the loss of online account access."
+    },
+    {
+      "id": "bank-003",
+      "category": "banking",
+      "role": "banking",
+      "question": "What types of financial services does a bank typically sell, according to the banking basics guide?",
+      "ground_truth": "According to the banking basics guide, banks sell financial services such as car loans, home mortgage loans, business loans, checking accounts, credit card services, certificates of deposit, and individual retirement accounts."
+    },
+    {
+      "id": "bank-004",
+      "category": "banking",
+      "role": "banking",
+      "question": "Where does a bank get the money it lends out to borrowers?",
+      "ground_truth": "Banks get the money they lend from people who open accounts. Banks act as go-betweens for people who save and people who want to borrow. Your savings are combined with the savings of others to form a large pool of money, and the bank uses that pool to make loans. If savers did not put their money in banks, banks would have little or no money to lend."
+    },
+    {
+      "id": "bank-005",
+      "category": "banking",
+      "role": "banking",
+      "question": "What are the risks of keeping your savings at home instead of depositing them in a bank?",
+      "ground_truth": "If you decide to keep your money at home, it will just sit there and won't earn any extra money for you. You also run the risk that a burglar, a fire, or some other disaster will wipe out your savings in the wink of an eye."
+    },
+    {
+      "id": "bank-006",
+      "category": "banking",
+      "role": "banking",
+      "question": "How does the Federal Reserve fit into the U.S. banking system?",
+      "ground_truth": "The Federal Reserve is the central banking system of the United States. It serves as a bank for other banks and for the U.S. government, and is responsible for U.S. monetary policy, which influences how much money and credit will be available to the economy. It also helps supervise and regulate banking institutions to ensure safety and soundness, protects consumers' credit rights, and maintains stability of the financial system. There are twelve Federal Reserve Banks, each serving its own Federal Reserve District, with headquarters — the Board of Governors — in Washington, D.C. Congress created the Federal Reserve in 1913."
+    },
+    {
+      "id": "bank-007",
+      "category": "banking",
+      "role": "banking",
+      "question": "What is the difference between a checking account and a savings account?",
+      "ground_truth": "Savings accounts are for people who want to keep their money in a safe place and earn interest at the same time. Checking accounts offer safety and convenience: you keep money in the account and write checks to pay bills or transfer money to others. A checking account provides a monthly record of checks written that can serve as proof of payment. Banks sometimes charge a fee for checking accounts because check processing is costly, while savings accounts earn interest."
+    },
+    {
+      "id": "bank-008",
+      "category": "banking",
+      "role": "banking",
+      "question": "What happens to your deposited money after a bank receives it — does the bank simply store it in a vault?",
+      "ground_truth": "No, banks do not simply store your deposited money in a vault. Your savings are combined with the savings of other depositors to form a large pool of money, and the bank uses that pool to make loans to borrowers. Banks act as go-betweens between savers and borrowers. The money belongs to the depositors, not to the bank's owners or stockholders."
+    },
+    {
+      "id": "bank-009",
+      "category": "banking",
+      "role": "banking",
+      "question": "Under what circumstances can a bank fail, and will you lose your money if it does?",
+      "ground_truth": "A bank can fail due to poor business decisions such as expanding too quickly or concentrating loans in one sector, fraud by bank officers, or changing economic conditions that make it difficult for borrowers to repay loans. However, if your bank fails, you will generally not lose your FDIC-insured deposits. The Federal Deposit Insurance Corporation (FDIC) has protected bank deposits since 1934, and no one has ever lost money that was FDIC-insured. The basic FDIC insured amount is $250,000 per depositor."
+    },
+    {
+      "id": "cc-001",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "What is the introductory APR period offered on Capital One consumer credit cards, and what is the non-introductory APR range?",
+      "ground_truth": "Capital One consumer credit cards offer an introductory APR of 0%, lasting from 9 months to 18 months depending on the specific card offer. After the introductory period, non-introductory purchase APR rates range between 25.74% and 29.74%. This APR varies with the market based on the Prime Rate."
+    },
+    {
+      "id": "cc-002",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "How is the interest charge calculated on a Capital One credit card — what balance calculation method is used?",
+      "ground_truth": "Interest charges on a Capital One credit card are calculated using a method called 'average daily balance (including new transactions).' The due date is at least 25 days after the close of each billing cycle. Capital One will not charge interest on new purchases if you have paid your previous balance in full by the due date each month. Interest begins accruing on cash advances and transfers on the transaction date."
+    },
+    {
+      "id": "cc-003",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "What is the late payment fee on a Bank of America Visa/Mastercard Platinum Plus account, and when does the penalty APR apply?",
+      "ground_truth": "The late payment fee on a Bank of America Visa/Mastercard Platinum Plus account is up to $37. A Penalty APR of up to 29.99% (based on creditworthiness, varying with the Prime Rate) may be applied to new transactions on your account if you make a late payment. Once applied, the Penalty APR will apply indefinitely."
+    },
+    {
+      "id": "cc-004",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances differ from the purchase APR?",
+      "ground_truth": "For ATM Cash Advances, Over the Counter Cash Advances, Same-Day Online Cash Advances, and Wire Transfers on a Bank of America Visa/Mastercard, the fee is 5% of the transaction amount with a minimum of $10 (uncapped). For Check Cash Advances and Direct Deposit Cash Advances, the fee is 2% to 4% with a minimum of $10 (uncapped). The APR for Direct Deposit and Check Cash Advances is Prime + 8.74% to Prime + 21.74% (equivalent to 12.24% to 25.24% as of March 31, 2016), while Bank Cash Advances are Prime + 21.74% (25.24%). These rates are higher than the purchase APR range of Prime + 5.74% to Prime + 20.74% (9.24% to 24.24%)."
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+# .github/workflows/rag_eval.yml
+#
+# RAG Quality Gate — RAGAS Evaluation CI
+# ========================================
+# Triggers on every pull request that touches pipeline code, prompts,
+# ground truth data, or documents.  Runs eval_ci.py and fails the PR
+# if any metric falls below its configured threshold.
+#
+# Required repository secrets (Settings → Secrets → Actions):
+#   OPENAI_API_KEY   — for OpenAI embeddings (text-embedding-3-small)
+#   GROQ_API_KEY     — for LLM inference (Groq Cloud)
+#   PINECONE_API_KEY — for vector search
+#   COHERE_API_KEY   — for Cohere re-ranking (optional; evaluation still runs
+#                      without it, using the original retrieval order)
+#
+# Optional secrets:
+#   PINECONE_ENVIRONMENT — defaults to us-east-1 if not set
+
+name: RAG Evaluation
+
+on:
+  pull_request:
+    paths:
+      - "rag_pipeline.py"
+      - "evaluation.py"
+      - "prompts.py"
+      - "config.py"
+      - "eval_ci.py"
+      - "eval_ground_truth.json"
+      - "RAGDocs/**"
+      - "requirements.txt"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "rag_pipeline.py"
+      - "evaluation.py"
+      - "prompts.py"
+      - "eval_ground_truth.json"
+
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+    inputs:
+      category:
+        description: "Limit evaluation to a single category (leave blank for all)"
+        required: false
+        default: ""
+      thresholds:
+        description: "Override thresholds e.g. faithfulness=0.8,answer_relevancy=0.75"
+        required: false
+        default: ""
+
+jobs:
+  rag-eval:
+    name: RAGAS Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # -----------------------------------------------------------------------
+      # 1. Checkout
+      # -----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # -----------------------------------------------------------------------
+      # 2. Set up Python
+      # -----------------------------------------------------------------------
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # -----------------------------------------------------------------------
+      # 3. Install dependencies
+      # -----------------------------------------------------------------------
+      - name: Install dependencies
+        run: pip install --quiet -r requirements.txt
+
+      # -----------------------------------------------------------------------
+      # 4. Verify critical imports before spending LLM tokens
+      # -----------------------------------------------------------------------
+      - name: Smoke-test imports
+        env:
+          OPENAI_API_KEY:   ${{ secrets.OPENAI_API_KEY }}
+          GROQ_API_KEY:     ${{ secrets.GROQ_API_KEY }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          COHERE_API_KEY:   ${{ secrets.COHERE_API_KEY }}
+        run: |
+          python -c "
+          from prompts import PROMPT_REGISTRY, REGISTRY_VERSION
+          print(f'Prompt registry v{REGISTRY_VERSION}: {list(PROMPT_REGISTRY)}')
+          from evaluation import RAGAS_AVAILABLE
+          print(f'RAGAS available: {RAGAS_AVAILABLE}')
+          import json, pathlib
+          gt = json.loads(pathlib.Path('eval_ground_truth.json').read_text())
+          print(f'Ground truth cases: {len(gt[\"cases\"])}')
+          "
+
+      # -----------------------------------------------------------------------
+      # 5. Dry-run: list selected cases without calling LLM
+      # -----------------------------------------------------------------------
+      - name: Dry-run (list cases)
+        env:
+          OPENAI_API_KEY:   ${{ secrets.OPENAI_API_KEY }}
+          GROQ_API_KEY:     ${{ secrets.GROQ_API_KEY }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          COHERE_API_KEY:   ${{ secrets.COHERE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.category }}" ]; then
+            ARGS="--category ${{ github.event.inputs.category }}"
+          fi
+          python eval_ci.py --dry-run $ARGS
+
+      # -----------------------------------------------------------------------
+      # 6. Run evaluation
+      # -----------------------------------------------------------------------
+      - name: Run RAGAS evaluation
+        id: eval
+        env:
+          OPENAI_API_KEY:        ${{ secrets.OPENAI_API_KEY }}
+          GROQ_API_KEY:          ${{ secrets.GROQ_API_KEY }}
+          PINECONE_API_KEY:      ${{ secrets.PINECONE_API_KEY }}
+          PINECONE_ENVIRONMENT:  ${{ secrets.PINECONE_ENVIRONMENT }}
+          COHERE_API_KEY:        ${{ secrets.COHERE_API_KEY }}
+          CI_LOG_LEVEL:          "WARNING"
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.category }}" ]; then
+            ARGS="$ARGS --category ${{ github.event.inputs.category }}"
+          fi
+          if [ -n "${{ github.event.inputs.thresholds }}" ]; then
+            ARGS="$ARGS --thresholds ${{ github.event.inputs.thresholds }}"
+          fi
+          python eval_ci.py --report eval_ci_report.json $ARGS
+
+      # -----------------------------------------------------------------------
+      # 7. Upload the JSON report as a build artifact (always — even on failure)
+      # -----------------------------------------------------------------------
+      - name: Upload evaluation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rag-eval-report-${{ github.run_number }}
+          path: eval_ci_report.json
+          retention-days: 90
+
+      # -----------------------------------------------------------------------
+      # 8. Post a summary to the GitHub Actions job summary page
+      # -----------------------------------------------------------------------
+      - name: Post summary
+        if: always()
+        run: |
+          python - <<'EOF'
+          import json, pathlib, sys
+
+          report_path = pathlib.Path("eval_ci_report.json")
+          if not report_path.exists():
+              print("No report file found.", file=sys.stderr)
+              sys.exit(0)
+
+          report  = json.loads(report_path.read_text())
+          summary = report["summary"]
+          avgs    = report.get("average_scores", {})
+
+          lines = [
+              "## RAG Evaluation Results",
+              "",
+              f"| Metric | Value |",
+              f"|--------|-------|",
+              f"| Total cases | {summary['total_cases']} |",
+              f"| Passed | {summary['passed']} |",
+              f"| Failed | {summary['failed']} |",
+              f"| Pass rate | {summary['pass_rate_pct']:.1f}% |",
+              f"| Prompt registry version | {report.get('prompt_registry_version', 'n/a')} |",
+              f"| Ground truth version | {report.get('ground_truth_version', 'n/a')} |",
+              "",
+              "### Average Scores",
+              "",
+              "| Metric | Score | Threshold |",
+              "|--------|-------|-----------|",
+          ]
+
+          thresholds = report.get("thresholds_applied", {})
+          for metric, val in avgs.items():
+              th  = thresholds.get(metric, "—")
+              th_str = f"{th:.2f}" if isinstance(th, float) else str(th)
+              icon = "✅" if not isinstance(th, float) or val >= th else "❌"
+              lines.append(f"| {metric} | {val:.4f} | {th_str} {icon} |")
+
+          lines += ["", "### Case Results", ""]
+          lines += [
+              "| ID | Category | Faith. | Relev. | Prec. | Recall | Status |",
+              "|----|----------|--------|--------|-------|--------|--------|",
+          ]
+
+          for r in report["results"]:
+              sc     = r.get("scores", {})
+              faith  = f"{sc.get('faithfulness', float('nan')):.3f}"
+              relev  = f"{sc.get('answer_relevancy', float('nan')):.3f}"
+              prec   = f"{sc.get('context_precision', float('nan')):.3f}"
+              recall = f"{sc.get('context_recall', float('nan')):.3f}"
+              status = "✅ PASS" if r["passed"] else "❌ FAIL"
+              if r.get("error") and not r.get("scores"):
+                  status = "⚠️ ERROR"
+              lines.append(
+                  f"| {r['id']} | {r.get('category', r['role'])} "
+                  f"| {faith} | {relev} | {prec} | {recall} | {status} |"
+              )
+
+          summary_md = "\n".join(lines)
+          with open(pathlib.Path(os.environ.get("GITHUB_STEP_SUMMARY", "/dev/null")), "a") as f:
+              f.write(summary_md + "\n")
+          print(summary_md)
+          EOF
+        env:
+          GITHUB_STEP_SUMMARY: ${{ env.GITHUB_STEP_SUMMARY }}
