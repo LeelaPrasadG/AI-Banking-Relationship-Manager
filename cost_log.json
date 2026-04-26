@@ -26,15 +26,23 @@
     }
   },
   "2026-04-26": {
-    "total_cost_usd": 0.16988214000000007,
-    "total_prompt_tokens": 14570,
-    "total_completion_tokens": 6468,
-    "total_embedding_tokens": 607,
-    "total_calls": 40,
+    "total_cost_usd": 0.2716518400000001,
+    "total_prompt_tokens": 24381,
+    "total_completion_tokens": 9982,
+    "total_embedding_tokens": 842,
+    "total_calls": 65,
     "users": {
       "cardagent": {
         "cost_usd": 0.16988214000000007,
         "calls": 40
+      },
+      "__ci__": {
+        "cost_usd": 0.09996470000000002,
+        "calls": 24
+      },
+      "__guardrail__": {
+        "cost_usd": 0.001805,
+        "calls": 1
       }
     }
   }

@@ -1,0 +1,420 @@
+{
+  "report_generated_at": "2026-04-26T22:02:35.625572+00:00",
+  "prompt_registry_version": "1.1.0",
+  "ground_truth_version": "1.0.0",
+  "ground_truth_file": "D:\\AI\\Git\\AI-Banking-Relationship-Manager\\eval_ground_truth.json",
+  "thresholds_applied": {
+    "faithfulness": 0.7,
+    "answer_relevancy": 0.7,
+    "context_precision": 0.5,
+    "context_recall": 0.5
+  },
+  "summary": {
+    "total_cases": 20,
+    "passed": 12,
+    "failed": 8,
+    "pass_rate_pct": 60.0
+  },
+  "average_scores": {
+    "faithfulness": NaN,
+    "answer_relevancy": NaN,
+    "context_precision": NaN,
+    "context_recall": NaN,
+    "context_entity_recall": NaN,
+    "noise_sensitivity(mode=relevant)": NaN
+  },
+  "results": [
+    {
+      "id": "auto-001",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What website governs Capital One Auto Finance's online terms and conditions, and what does accepting the agreement mean for the borrower?",
+      "ground_truth": "The website www.capitalone.com (the Online Servicing Site) governs Capital One Auto Finance's online terms and conditions. By using the Services, the borrower acknowledges that they have read and agree to abide by the terms and conditions of the Agreement. If the borrower decides not to agree to the terms and conditions, they may not use the Services. Use of the Services after notice of any changes constitutes acceptance of those changes.",
+      "answer": "The website that governs Capital One Auto Finance\u2019s online terms and conditions is **www.capitalone.com**\u3010Document Context\u3011.  \n\nAccepting the agreement means that **the borrower (or any user) acknowledges that they have read the agreement and agree to abide by its terms and conditions, and that use of the Services is expressly conditioned on that acceptance**\u3010Document Context\u3011.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 176.83,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "auto-002",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What happens to the lien on your vehicle title after you fully pay off your auto loan?",
+      "ground_truth": "Once you have paid off your auto loan, the lien on your vehicle title should be satisfied. The lien holder should send you either the title or a lien release document within a reasonable amount of time. Once you receive either of these documents, you follow your state's protocol for transferring the title to your name.",
+      "answer": "After the loan is paid in full, the lien holder is required to send a release document (referred to as a \u201cflex or skin release document\u201d) so that the title can be transferred according to the state\u2019s protocol.\u202f\u3010\u201cthe lien holder should send get the flex or skin release document in a reasonable amount due time\u201d\u3011\u202f\u3010\u201conce you publish either wipe these documents follow if state's protocol for transferring the title to block name.\u201d\u3011",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 185.9,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "auto-003",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "Can Capital One change the terms and conditions of an auto loan agreement? Under what circumstances?",
+      "ground_truth": "Yes, Capital One may revise, update, discontinue, or otherwise modify the terms and conditions of the agreement at any time. They will attempt to provide prior notice of material changes by posting a notice on the Online Servicing Site when you log in, sending a notice to your address on file, or by other permitted methods. Capital One reserves the right to make changes effective immediately if necessary to maintain system security or to comply with any laws or regulations. Continued use of the Services after notice of changes constitutes acceptance of those changes.",
+      "answer": "Yes.\u202fThe documents state that Capital\u202fOne may change the terms and conditions \u201cwhen\u202fconflicts\u202fwith\u202fprime\u202frate\u202fwill\u202fchange\u201d\u3010e Terms and Conditions | Capital One\u3011.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 185.82,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "auto-004",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What is a gap coverage application in the context of an auto loan, and when might it be relevant?",
+      "ground_truth": "A gap coverage application in the context of an auto loan refers to an application for Guaranteed Asset Protection (GAP) coverage. GAP coverage is relevant when the outstanding loan balance exceeds the actual cash value of the vehicle \u2014 for example, when a vehicle is totaled in an accident or stolen shortly after purchase and standard auto insurance pays less than what is owed on the loan. It helps cover the shortfall between the insurance payout and the remaining loan balance.",
+      "answer": "The documents only refer to a \u201cgap coverage application\u201d in a brief statement about loan terms and credit standing:\n\n> \u201cHow much debt on introducing new loan term length of the **gap coverage application** to behave like a good standing under this credit levels \u2026\u201d  \n\nThe context does not define what a gap coverage application is or describe the situations in which it would be relevant.\n\nI do not have document support for the remaining part of your question.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 179.41,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "auto-005",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "How does the Prime Rate affect variable APR on a Capital One auto loan?",
+      "ground_truth": "Variable APR on a Capital One auto loan is tied to the Prime Rate. When the Prime Rate changes, the variable interest rate on the loan adjusts accordingly, which can increase or decrease your interest charges and required minimum payment amounts. The specific margin added to the Prime Rate is determined at the time of loan origination based on your creditworthiness.",
+      "answer": "I'm sorry, I cannot find information about that in the Auto Loan documents provided to me. Please contact our support team for further assistance.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 137.2,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "auto-006",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What is required if you want to refinance an auto loan with Capital One, and how is creditworthiness evaluated?",
+      "ground_truth": "To refinance an auto loan with Capital One, you must submit a new loan application. Creditworthiness is evaluated based on your credit history, income, existing debts, and ability to repay. Capital One reviews your credit report and financial information to determine whether to approve the refinancing and at what interest rate. Terms and rates may differ from your original loan.",
+      "answer": "To refinance an auto loan with Capital\u202fOne you should\u202f**use the auto\u2011refinance calculator** to compare your current situation\u202f\u2014\u202fthe documents say \u201cUse this auto refinance calculator to compare against current revenue with a.\u201d\u202f\u30101\u2020L9-L10\u3011\n\nCreditworthiness is judged primarily by your credit\u2011score range. The material notes two categories:\n\n- **Non\u2011prime:** credit scores **between\u202f660\u202fand\u202f601**  \n- **Sub\u2011prime:** credit scores **between\u202f600\u202fand\u202f501**  \n\nBorrowers in these ranges \u201cmay be rejected by many lenders or offered high interest rates.\u201d\u202fCapital\u202fOne also \u201cworks with borrowers with credit scores as can as\u202f500.\u201d\u202f\u30101\u2020L11-L13\u3011\u30101\u2020L14-L15\u3011\n\nI do not have document support for any additional requirements beyond using the refinance calculator.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 162.13,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "auto-007",
+      "category": "auto-loan",
+      "role": "auto-loan",
+      "question": "What does the term 'payoff amount' mean for an auto loan, and how is it different from the remaining principal balance?",
+      "ground_truth": "The payoff amount for an auto loan is the total amount required to completely pay off the loan as of a specific date. It includes the remaining principal balance plus any interest accrued since the last payment and any applicable fees. The remaining principal balance, by contrast, is only the original borrowed amount that has not yet been repaid \u2014 it does not include accrued interest or fees. Therefore, the payoff amount is typically higher than the remaining principal balance alone.",
+      "answer": "I'm sorry, I cannot find information about that in the Auto Loan documents provided to me. Please contact our support team for further assistance.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 159.11,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "bank-001",
+      "category": "banking",
+      "role": "banking",
+      "question": "What is the Capital One Online Banking agreement governing number and when was it last modified?",
+      "ground_truth": "The Capital One Online Banking Terms and Conditions agreement was last modified on 12/2/2025. It governs the use of the Services available through the Online Banking Website, including access via https://www.capitalone.com and https://myaccounts.capitalone.com.",
+      "answer": "The agreement is titled **\u201cCapital One Online Banking Terms\u202f&\u202fConditions\u201d** and it was **last modified\u202f[DOB REDACTED]**\u30101\u2020L1-L4\u3011.  \n\nI do not have document support for the governing number of the agreement.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 160.64,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "bank-002",
+      "category": "banking",
+      "role": "banking",
+      "question": "How can a customer withdraw their consent to the Capital One Online Banking agreement, and what is the consequence?",
+      "ground_truth": "A customer can withdraw their consent to the Capital One Online Banking agreement at any time by calling Capital One at (844) 348-8656. However, withdrawing consent will result in the loss of online account access.",
+      "answer": "A customer can withdraw their consent to the agreement **by calling\u202f(844)\u202f348\u20118656**.  \nThe consequence of doing so is **the loss of your online account access**.\u3010Capital\u202fOne\u202fOnline\u202fBanking\u202fTerms\u202f&\u202fConditions, Introduction\u3011",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 185.09,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "bank-003",
+      "category": "banking",
+      "role": "banking",
+      "question": "What types of financial services does a bank typically sell, according to the banking basics guide?",
+      "ground_truth": "According to the banking basics guide, banks sell financial services such as car loans, home mortgage loans, business loans, checking accounts, credit card services, certificates of deposit, and individual retirement accounts.",
+      "answer": "Banks sell financial services such as **car loans, home mort\u2011gage loans, business loans, checking accounts, credit card services, certificates of deposit, and individual retirement accounts**\u3010Document Context\u3011.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 173.83,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "bank-004",
+      "category": "banking",
+      "role": "banking",
+      "question": "Where does a bank get the money it lends out to borrowers?",
+      "ground_truth": "Banks get the money they lend from people who open accounts. Banks act as go-betweens for people who save and people who want to borrow. Your savings are combined with the savings of others to form a large pool of money, and the bank uses that pool to make loans. If savers did not put their money in banks, banks would have little or no money to lend.",
+      "answer": "Banks get the money to lend from the deposits of their customers.\u202fThe documents state:\u202f\u201cWhere do banks get the money to lend?\u202fThey get it from people who open accounts.\u201d\u202fIt further explains that \u201cYour savings are combined with the savings of others to form a big pool of money, and the bank uses that money to make loans.\u201d",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 168.91,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "bank-005",
+      "category": "banking",
+      "role": "banking",
+      "question": "What are the risks of keeping your savings at home instead of depositing them in a bank?",
+      "ground_truth": "If you decide to keep your money at home, it will just sit there and won't earn any extra money for you. You also run the risk that a burglar, a fire, or some other disaster will wipe out your savings in the wink of an eye.",
+      "answer": "Keeping your money at home means it \u201cwill just sit there and won\u2019t earn any extra money for you.\u201d\u202fIn addition, you \u201crun the risk that a burglar, a fire, or some other disaster will wipe out your savings in the wink of an eye.\u201d\u202fThese are the risks of saving at home versus depositing the funds in a bank.",
+      "scores": {
+        "faithfulness": NaN,
+        "answer_relevancy": NaN,
+        "context_precision": NaN,
+        "context_recall": NaN,
+        "context_entity_recall": NaN,
+        "noise_sensitivity(mode=relevant)": NaN
+      },
+      "passed": true,
+      "failures": [],
+      "latency_s": 71.53,
+      "error": null,
+      "eval_success": true,
+      "eval_error": null
+    },
+    {
+      "id": "bank-006",
+      "category": "banking",
+      "role": "banking",
+      "question": "How does the Federal Reserve fit into the U.S. banking system?",
+      "ground_truth": "The Federal Reserve is the central banking system of the United States. It serves as a bank for other banks and for the U.S. government, and is responsible for U.S. monetary policy, which influences how much money and credit will be available to the economy. It also helps supervise and regulate banking institutions to ensure safety and soundness, protects consumers' credit rights, and maintains stability of the financial system. There are twelve Federal Reserve Banks, each serving its own Federal Reserve District, with headquarters \u2014 the Board of Governors \u2014 in Washington, D.C. Congress created the Federal Reserve in 1913.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 3.89,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "bank-007",
+      "category": "banking",
+      "role": "banking",
+      "question": "What is the difference between a checking account and a savings account?",
+      "ground_truth": "Savings accounts are for people who want to keep their money in a safe place and earn interest at the same time. Checking accounts offer safety and convenience: you keep money in the account and write checks to pay bills or transfer money to others. A checking account provides a monthly record of checks written that can serve as proof of payment. Banks sometimes charge a fee for checking accounts because check processing is costly, while savings accounts earn interest.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.22,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "bank-008",
+      "category": "banking",
+      "role": "banking",
+      "question": "What happens to your deposited money after a bank receives it \u2014 does the bank simply store it in a vault?",
+      "ground_truth": "No, banks do not simply store your deposited money in a vault. Your savings are combined with the savings of other depositors to form a large pool of money, and the bank uses that pool to make loans to borrowers. Banks act as go-betweens between savers and borrowers. The money belongs to the depositors, not to the bank's owners or stockholders.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.22,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "bank-009",
+      "category": "banking",
+      "role": "banking",
+      "question": "Under what circumstances can a bank fail, and will you lose your money if it does?",
+      "ground_truth": "A bank can fail due to poor business decisions such as expanding too quickly or concentrating loans in one sector, fraud by bank officers, or changing economic conditions that make it difficult for borrowers to repay loans. However, if your bank fails, you will generally not lose your FDIC-insured deposits. The Federal Deposit Insurance Corporation (FDIC) has protected bank deposits since 1934, and no one has ever lost money that was FDIC-insured. The basic FDIC insured amount is $250,000 per depositor.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.43,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "cc-001",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "What is the introductory APR period offered on Capital One consumer credit cards, and what is the non-introductory APR range?",
+      "ground_truth": "Capital One consumer credit cards offer an introductory APR of 0%, lasting from 9 months to 18 months depending on the specific card offer. After the introductory period, non-introductory purchase APR rates range between 25.74% and 29.74%. This APR varies with the market based on the Prime Rate.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.41,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "cc-002",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "How is the interest charge calculated on a Capital One credit card \u2014 what balance calculation method is used?",
+      "ground_truth": "Interest charges on a Capital One credit card are calculated using a method called 'average daily balance (including new transactions).' The due date is at least 25 days after the close of each billing cycle. Capital One will not charge interest on new purchases if you have paid your previous balance in full by the due date each month. Interest begins accruing on cash advances and transfers on the transaction date.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.36,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "cc-003",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "What is the late payment fee on a Bank of America Visa/Mastercard Platinum Plus account, and when does the penalty APR apply?",
+      "ground_truth": "The late payment fee on a Bank of America Visa/Mastercard Platinum Plus account is up to $37. A Penalty APR of up to 29.99% (based on creditworthiness, varying with the Prime Rate) may be applied to new transactions on your account if you make a late payment. Once applied, the Penalty APR will apply indefinitely.",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.34,
+      "error": "Error processing query: Connection error."
+    },
+    {
+      "id": "cc-004",
+      "category": "credit-card",
+      "role": "credit-card",
+      "question": "What is the cash advance fee structure for a Bank of America Visa/Mastercard, and how does the APR for cash advances differ from the purchase APR?",
+      "ground_truth": "For ATM Cash Advances, Over the Counter Cash Advances, Same-Day Online Cash Advances, and Wire Transfers on a Bank of America Visa/Mastercard, the fee is 5% of the transaction amount with a minimum of $10 (uncapped). For Check Cash Advances and Direct Deposit Cash Advances, the fee is 2% to 4% with a minimum of $10 (uncapped). The APR for Direct Deposit and Check Cash Advances is Prime + 8.74% to Prime + 21.74% (equivalent to 12.24% to 25.24% as of March 31, 2016), while Bank Cash Advances are Prime + 21.74% (25.24%). These rates are higher than the purchase APR range of Prime + 5.74% to Prime + 20.74% (9.24% to 24.24%).",
+      "answer": null,
+      "scores": {},
+      "passed": false,
+      "failures": [
+        "Pipeline error: Error processing query: Connection error."
+      ],
+      "latency_s": 1.46,
+      "error": "Error processing query: Connection error."
+    }
+  ],
+  "cli": {
+    "category": null,
+    "id": null,
+    "thresholds": null,
+    "report": "D:\\AI\\Git\\AI-Banking-Relationship-Manager\\eval_ci_report.json",
+    "dry_run": false,
+    "ground_truth": "D:\\AI\\Git\\AI-Banking-Relationship-Manager\\eval_ground_truth.json"
+  }
+}

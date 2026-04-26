@@ -22,6 +22,21 @@ That's what this platform does. Built for relationship managers, credit analysts
 
 - **Deploy Without Drama** — It's built as production-ready. Deploy it, set up your users, load your documents, and you're live. No infrastructure overhaul needed.
 
+## 🔑 Key Engineering Highlights
+
+| Capability | Summary |
+|---|---|
+| **RAG + LangChain** | Retrieval-Augmented Generation pipeline built on LangChain — every answer is grounded in retrieved document chunks, never generated from model memory alone. |
+| **RBAC** | Role-Based Access Control enforced at query time — users only retrieve chunks belonging to their assigned roles (auto-loan, credit-card, banking). |
+| **Guardrails** | Scope classifier blocks off-topic questions before they reach the LLM, preventing policy drift and prompt injection. |
+| **PII Masking** | Sensitive data (SSNs, bank account numbers, card numbers) is detected and redacted before being logged or passed to external APIs, preventing accidental exposure of customer information. |
+| **Versioned Prompt Registry** | All LLM prompt strings live in `prompts.py` as immutable, versioned `PromptSpec` objects — no inline prompt strings anywhere else in the codebase, making prompt changes auditable and diff-friendly. |
+| **Cost & Token Tracking** | Every LLM and embedding call is priced in USD using per-model rate tables, accumulated per-user and per-day, persisted to `cost_log.json`, and alerting when configurable spend thresholds are breached. |
+| **Hybrid Search (BM25 + Vector)** | Retrieved vector chunks are re-ranked using BM25 keyword scoring (via Cohere Rerank) to improve precision — surfacing the most lexically and semantically relevant passages before they reach the LLM. |
+| **Evaluation Framework (RAGAS)** | Scores every LLM answer on faithfulness, answer relevancy, context precision, and context recall using the RAGAS framework; results persisted to `eval_log.json`. |
+| **Citation Enforcement** | Prompt-level rules require the model to quote document text verbatim and emit a fixed decline phrase when context is insufficient — hallucination is structurally prevented, not just hoped for. |
+| **Offline Evaluation Script** | `eval_ci.py` runs 20 document-sourced ground-truth Q&A pairs through the full pipeline and fails with exit code 1 if any metric drops below threshold; wired into GitHub Actions so every pull request triggers an automatic quality gate. |
+
 ## 🏗️ Technical Architecture
 
 ### Technology Stack
