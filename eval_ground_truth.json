@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "description": "Ground-truth QA pairs for offline RAGAS CI evaluation.",
+    "description": "Ground truth QA pairs for offline RAGAS CI evaluation.",
     "version": "1.0.0",
     "created": "2026-04-26",
     "sources": [

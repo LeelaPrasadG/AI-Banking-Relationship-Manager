@@ -121,5 +121,245 @@
       "version": "2.0",
       "registry_version": "1.1.0"
     }
+  },
+  {
+    "timestamp": "2026-04-26T21:32:52.688536Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "What website governs Capital One Auto Finance's online terms and conditions, and what does accepting the agreement mean ",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:35:58.586318Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "What happens to the lien on your vehicle title after you fully pay off your auto loan?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:39:04.404578Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "Can Capital One change the terms and conditions of an auto loan agreement? Under what circumstances?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:42:03.819390Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "What is a gap coverage application in the context of an auto loan, and when might it be relevant?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:44:21.010314Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "How does the Prime Rate affect variable APR on a Capital One auto loan?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:47:03.131804Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "What is required if you want to refinance an auto loan with Capital One, and how is creditworthiness evaluated?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:49:42.241186Z",
+    "username": "__ci__",
+    "role": "auto-loan",
+    "question_preview": "What does the term 'payoff amount' mean for an auto loan, and how is it different from the remaining principal balance?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:52:22.886909Z",
+    "username": "__ci__",
+    "role": "banking",
+    "question_preview": "What is the Capital One Online Banking agreement governing number and when was it last modified?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:55:27.978813Z",
+    "username": "__ci__",
+    "role": "banking",
+    "question_preview": "How can a customer withdraw their consent to the Capital One Online Banking agreement, and what is the consequence?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T21:58:21.820576Z",
+    "username": "__ci__",
+    "role": "banking",
+    "question_preview": "What types of financial services does a bank typically sell, according to the banking basics guide?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T22:01:10.736749Z",
+    "username": "__ci__",
+    "role": "banking",
+    "question_preview": "Where does a bank get the money it lends out to borrowers?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
+  },
+  {
+    "timestamp": "2026-04-26T22:02:22.256426Z",
+    "username": "__ci__",
+    "role": "banking",
+    "question_preview": "What are the risks of keeping your savings at home instead of depositing them in a bank?",
+    "has_ground_truth": true,
+    "scores": {
+      "faithfulness": NaN,
+      "answer_relevancy": NaN,
+      "context_precision": NaN,
+      "context_recall": NaN,
+      "context_entity_recall": NaN,
+      "noise_sensitivity(mode=relevant)": NaN
+    },
+    "prompt_meta": {
+      "key": "rag_answer",
+      "version": "2.0",
+      "registry_version": "1.1.0"
+    }
   }
 ]
