@@ -113,6 +113,7 @@ class RAGASEvaluator:
         ground_truth: Optional[str] = None,
         username: str = "__unknown__",
         role: str = "__unknown__",
+        prompt_meta: Optional[dict] = None,
     ) -> dict:
         """
         Run RAGAS evaluation for one QA sample.
@@ -187,12 +188,13 @@ class RAGASEvaluator:
             for metric, score in scores.items():
                 logger.info("[EVAL]   %-32s = %.4f", metric, score)
 
-            self._persist(username, role, question, scores, has_gt)
+            self._persist(username, role, question, scores, has_gt, prompt_meta)
             return {
                 "success": True,
                 "scores": {k: round(v, 4) for k, v in scores.items()},
                 "metrics_run": metric_names,
                 "has_ground_truth": has_gt,
+                "prompt_meta": prompt_meta,
             }
 
         except Exception as exc:
@@ -206,6 +208,7 @@ class RAGASEvaluator:
                 "scores": {},
                 "metrics_run": metric_names,
                 "has_ground_truth": has_gt,
+                "prompt_meta": prompt_meta,
             }
 
     # ------------------------------------------------------------------
@@ -238,6 +241,7 @@ class RAGASEvaluator:
         question: str,
         scores: dict[str, float],
         has_ground_truth: bool,
+        prompt_meta: Optional[dict] = None,
     ) -> None:
         """Append evaluation entry to eval_log.json."""
         entry = {
@@ -247,6 +251,7 @@ class RAGASEvaluator:
             "question_preview": question[:120],
             "has_ground_truth": has_ground_truth,
             "scores": {k: round(v, 4) for k, v in scores.items()},
+            "prompt_meta": prompt_meta or {},
         }
         try:
             log: list = []

@@ -1,6 +1,5 @@
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import PromptTemplate
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from prompts import build_prompt, prompt_version, prompt_metadata, CITATION_DECLINE_PREFIX
 from pinecone import Pinecone
 from config import OPENAI_API_KEY, PINECONE_API_KEY, PINECONE_INDEX_NAME, OPENAI_MODEL
 from config import GROQ_API_KEY, XAI_BASE_URL
@@ -84,19 +83,7 @@ class Guardrails:
 
     def __init__(self, llm: ChatOpenAI):
         self._llm = llm
-        self._scope_prompt = PromptTemplate(
-            input_variables=["question", "categories"],
-            template=(
-                "You are a strict topic classifier for a banking assistant.\n"
-                "The assistant can ONLY answer questions about: {categories}.\n\n"
-                "Question: {question}\n\n"
-                "Reply with exactly one word: RELEVANT or IRRELEVANT.\n"
-                "- RELEVANT: the question is clearly about banking, loans, credit cards, "
-                "account management, or financial products.\n"
-                "- IRRELEVANT: the question has nothing to do with banking/finance.\n\n"
-                "Classification:"
-            ),
-        )
+        self._scope_prompt = build_prompt("scope_classifier")
 
     # ------------------------------------------------------------------
     # Public API
@@ -284,29 +271,6 @@ class RAGPipeline:
         }
         return names.get(category, category)
     
-    def _create_category_prompt(self, category):
-        """Create a role-specific prompt"""
-        category_name = self._get_category_name(category)
-        
-        template = f"""You are a helpful customer service assistant for {category_name} products at a bank.
-        
-Based on the provided {category_name} documents, answer the customer's question accurately and professionally.
-
-If the question is not related to {category_name} or cannot be answered from the provided documents, 
-politely inform the user that you can only assist with {category_name} related queries.
-
-Context from documents:
-{{context}}
-
-Question: {{question}}
-
-Answer:"""
-        
-        return PromptTemplate(
-            template=template,
-            input_variables=["context", "question"]
-        )
-    
     def query(self, question, username, user_roles, ground_truth=None, run_eval=False):
         """
         Query the RAG system with role-based access control and guardrails.
@@ -484,12 +448,16 @@ Answer:"""
                     chunk['text'] for chunk in retrieved_chunks
                 ]) if retrieved_chunks else "No relevant documents found."
                 
-                # Create prompt and get answer
-                prompt = self._create_category_prompt(role)
-                formatted_prompt = prompt.format(context=context, question=question)
+                # Create prompt and get answer (versioned, citation-enforced)
+                prompt = build_prompt("rag_answer")
+                formatted_prompt = prompt.format(
+                    category_name=category_name,
+                    context=context,
+                    question=question,
+                )
                 logger.info(
-                    "[PROMPT] user='%s' role='%s' formatted prompt:\n%s",
-                    username, role, formatted_prompt
+                    "[PROMPT] user='%s' role='%s' prompt=rag_answer@v%s:\n%s",
+                    username, role, prompt_version("rag_answer"), formatted_prompt
                 )
                 # Get LLM response
                 logger.info(
@@ -527,6 +495,17 @@ Answer:"""
                         username, role, llm_error, exc_info=True
                     )
                     answer_text = f"Error getting response: {str(llm_error)}"
+
+                # ----------------------------------------------------------
+                # CITATION DECLINE DETECTION
+                # ----------------------------------------------------------
+                if answer_text.strip().startswith(CITATION_DECLINE_PREFIX):
+                    logger.warning(
+                        "[CITATION_DECLINE] user='%s' role='%s' — model declined: "
+                        "retrieved context did not support the question. "
+                        "prompt=rag_answer@v%s",
+                        username, role, prompt_version("rag_answer"),
+                    )
 
                 # ----------------------------------------------------------
                 # OUTPUT GUARDRAIL – redact any PII that leaked into answer
@@ -575,6 +554,7 @@ Answer:"""
                             ground_truth=ground_truth,
                             username=username,
                             role=role,
+                            prompt_meta=prompt_metadata("rag_answer"),
                         )
                         answers_by_category[category_name]['evaluation'] = eval_result
                     else:
